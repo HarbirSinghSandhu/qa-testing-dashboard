@@ -2,8 +2,7 @@
 
 An interactive dashboard for tracking test results, bugs, code coverage, and CI/CD pipeline status — built around a real-world Python + AWS engineering stack.
 
-**Live demo:** https://yourusername.github.io/qa-testing-dashboard/
-*(replace with your actual GitHub Pages link once enabled)*
+**Live demo:**  https://harbirsinghsandhu.github.io/qa-testing-dashboard/
 
 ## Overview
 
@@ -26,15 +25,7 @@ This project simulates a QA & testing support workflow for a backend/data engine
 
 As a Python developer with experience in cloud automation, data pipelines, and ML, I wanted a project that demonstrates QA thinking applied specifically to backend and data systems — not just traditional UI testing. This dashboard reflects the kind of test/bug/coverage visibility a QA or DevOps-minded engineer would want when supporting a Python/AWS-based product.
 
-## Running locally
 
-No installation needed. Clone the repo and open `index.html` in any browser:
-
-```bash
-git clone https://github.com/yourusername/qa-testing-dashboard.git
-cd qa-testing-dashboard
-open index.html
-```
 
 ## Author
 

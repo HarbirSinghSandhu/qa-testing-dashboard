@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA & Testing Dashboard — Harbir Singh Sandhu</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #ffffff;
+      --bg-secondary: #f5f5f3;
+      --bg-tertiary: #efefed;
+      --text-primary: #1a1a18;
+      --text-secondary: #6b6b67;
+      --border: rgba(0,0,0,0.12);
+      --border-secondary: rgba(0,0,0,0.2);
+      --success-bg: #EAF3DE;
+      --success-text: #27500A;
+      --danger-bg: #FCEBEB;
+      --danger-text: #791F1F;
+      --info-bg: #E6F1FB;
+      --info-text: #0C447C;
+      --warn-bg: #FAEEDA;
+      --warn-text: #633806;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #1e1e1c;
+        --bg-secondary: #2a2a28;
+        --bg-tertiary: #242422;
+        --text-primary: #f0efea;
+        --text-secondary: #9a9a94;
+        --border: rgba(255,255,255,0.1);
+        --border-secondary: rgba(255,255,255,0.18);
+        --success-bg: #173404;
+        --success-text: #C0DD97;
+        --danger-bg: #501313;
+        --danger-text: #F7C1C1;
+        --info-bg: #042C53;
+        --info-text: #B5D4F4;
+        --warn-bg: #412402;
+        --warn-text: #FAC775;
+      }
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      padding: 0;
+    }
+
+    header {
+      background: var(--bg);
+      border-bottom: 0.5px solid var(--border);
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 {
+      font-size: 17px;
+      font-weight: 500;
+    }
+
+    header span {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-bottom: 2rem;
+    }
+
+    .metric {
+      background: var(--bg);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      border: 0.5px solid var(--border);
+    }
+
+    .metric-label {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .metric-value {
+      font-size: 26px;
+      font-weight: 500;
+    }
+
+    .metric-sub {
+      font-size: 12px;
+      margin-top: 4px;
+      color: var(--text-secondary);
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .two-col { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--bg);
+      border: 0.5px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 9px;
+      border-radius: 99px;
+    }
+
+    .badge-pass  { background: var(--success-bg); color: var(--success-text); }
+    .badge-fail  { background: var(--danger-bg);  color: var(--danger-text); }
+    .badge-skip  { background: var(--warn-bg);    color: var(--warn-text); }
+    .badge-run   { background: var(--info-bg);    color: var(--info-text); }
+    .badge-open  { background: var(--danger-bg);  color: var(--danger-text); }
+    .badge-prog  { background: var(--info-bg);    color: var(--info-text); }
+    .badge-done  { background: var(--success-bg); color: var(--success-text); }
+    .badge-crit  { background: var(--danger-bg);  color: var(--danger-text); }
+    .badge-high  { background: var(--warn-bg);    color: var(--warn-text); }
+    .badge-med   { background: var(--info-bg);    color: var(--info-text); }
+
+    .tab-row { display: flex; gap: 4px; margin-bottom: 1rem; flex-wrap: wrap; }
+
+    .tab {
+      font-size: 13px;
+      padding: 5px 14px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-secondary);
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-secondary);
+      transition: background 0.15s;
+    }
+
+    .tab:hover { background: var(--bg-secondary); }
+    .tab.active { background: var(--bg-secondary); color: var(--text-primary); font-weight: 500; }
+
+    .test-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13px;
+    }
+    .test-row:last-child { border-bottom: none; }
+
+    .test-name { font-weight: 500; color: var(--text-primary); }
+    .test-meta { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+
+    .bug-row {
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13px;
+    }
+    .bug-row:last-child { border-bottom: none; }
+
+    .bug-title { font-weight: 500; color: var(--text-primary); margin-bottom: 5px; }
+    .bug-meta { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+
+    .bar-wrap { margin-bottom: 10px; }
+    .bar-label { display: flex; justify-content: space-between; font-size: 12px; color: var(--text-secondary); margin-bottom: 4px; }
+    .bar-track { height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 4px; transition: width 0.6s ease; }
+
+    .pipeline-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 0;
+      border-bottom: 0.5px solid var(--border);
+      font-size: 13px;
+    }
+    .pipeline-row:last-child { border-bottom: none; }
+
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot-green  { background: #1D9E75; }
+    .dot-red    { background: #E24B4A; }
+    .dot-amber  { background: #EF9F27; }
+    .dot-blue   { background: #378ADD; }
+
+    .chart-bars {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      height: 100px;
+      margin-top: 8px;
+    }
+
+    .chart-bar-col {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      flex: 1;
+    }
+
+    .chart-bar-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      height: 100px;
+      width: 100%;
+      gap: 1px;
+    }
+
+    .chart-bar-seg { width: 100%; }
+
+    .chart-day { font-size: 11px; color: var(--text-secondary); margin-top: 5px; }
+
+    .actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1.5rem; }
+
+    .btn {
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: var(--radius-md);
+      border: 0.5px solid var(--border-secondary);
+      cursor: pointer;
+      background: transparent;
+      color: var(--text-primary);
+      transition: background 0.15s, transform 0.1s;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .btn:hover { background: var(--bg-secondary); }
+    .btn:active { transform: scale(0.98); }
+
+    .legend { display: flex; gap: 16px; margin-top: 10px; }
+    .legend-item { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text-secondary); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 2px; }
+
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 12px;
+      color: var(--text-secondary);
+      border-top: 0.5px solid var(--border);
+      margin-top: 2rem;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1><i class="ti ti-shield-check" style="font-size:18px;vertical-align:-3px;margin-right:6px" aria-hidden="true"></i>QA & Testing Dashboard</h1>
+  <span>Harbir Singh Sandhu · Python & AWS Engineer</span>
+</header>
+
+<div class="main">
+
+  <div style="margin-bottom:1.5rem">
+    <div class="section-label">Sprint overview</div>
+  </div>
+
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label"><i class="ti ti-check" aria-hidden="true"></i> Tests passed</div>
+      <div class="metric-value" style="color:#1D9E75">847</div>
+      <div class="metric-sub" style="color:#1D9E75">↑ 94.1% pass rate</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label"><i class="ti ti-x" aria-hidden="true"></i> Tests failed</div>
+      <div class="metric-value" style="color:#E24B4A">53</div>
+      <div class="metric-sub">12 blocking</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label"><i class="ti ti-bug" aria-hidden="true"></i> Open bugs</div>
+      <div class="metric-value">18</div>
+      <div class="metric-sub" style="color:#E24B4A">4 critical</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label"><i class="ti ti-chart-bar" aria-hidden="true"></i> Coverage</div>
+      <div class="metric-value">82%</div>
+      <div class="metric-sub">+3% this sprint</div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="section-label">Test suites</div>
+      <div class="tab-row" id="suite-tabs">
+        <button class="tab active" onclick="filterSuite('all',this)">All</button>
+        <button class="tab" onclick="filterSuite('pass',this)">Passed</button>
+        <button class="tab" onclick="filterSuite('fail',this)">Failed</button>
+        <button class="tab" onclick="filterSuite('skip',this)">Skipped</button>
+      </div>
+      <div id="test-list">
+        <div class="test-row" data-status="pass">
+          <div><div class="test-name">AWS S3 ingestion pipeline</div><div class="test-meta">boto3 · 0.8s</div></div>
+          <span class="badge badge-pass">Passed</span>
+        </div>
+        <div class="test-row" data-status="fail">
+          <div><div class="test-name">RDS backup & restore</div><div class="test-meta">PostgreSQL · 3.2s</div></div>
+          <span class="badge badge-fail">Failed</span>
+        </div>
+        <div class="test-row" data-status="pass">
+          <div><div class="test-name">CloudWatch alarm trigger</div><div class="test-meta">AWS SDK · 1.1s</div></div>
+          <span class="badge badge-pass">Passed</span>
+        </div>
+        <div class="test-row" data-status="pass">
+          <div><div class="test-name">Pandas data cleaning</div><div class="test-meta">Scikit-learn · 2.4s</div></div>
+          <span class="badge badge-pass">Passed</span>
+        </div>
+        <div class="test-row" data-status="fail">
+          <div><div class="test-name">FastAPI endpoint /predict</div><div class="test-meta">FastAPI · 0.5s</div></div>
+          <span class="badge badge-fail">Failed</span>
+        </div>
+        <div class="test-row" data-status="skip">
+          <div><div class="test-name">EC2 scaling simulation</div><div class="test-meta">CloudFormation · —</div></div>
+          <span class="badge badge-skip">Skipped</span>
+        </div>
+        <div class="test-row" data-status="pass">
+          <div><div class="test-name">ML model accuracy check</div><div class="test-meta">Scikit-learn · 4.8s</div></div>
+          <span class="badge badge-pass">Passed</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">Bug tracker</div>
+      <div id="bug-list">
+        <div class="bug-row">
+          <div class="bug-title">RDS connection pool exhaustion</div>
+          <div class="bug-meta"><span class="badge badge-crit">Critical</span><span class="badge badge-open">Open</span><span style="font-size:12px;color:var(--text-secondary)">Assigned: Harbir</span></div>
+        </div>
+        <div class="bug-row">
+          <div class="bug-title">S3 presigned URL expiry mismatch</div>
+          <div class="bug-meta"><span class="badge badge-high">High</span><span class="badge badge-prog">In progress</span><span style="font-size:12px;color:var(--text-secondary)">Assigned: Harbir</span></div>
+        </div>
+        <div class="bug-row">
+          <div class="bug-title">Pandas dtype inference on CSV upload</div>
+          <div class="bug-meta"><span class="badge badge-med">Medium</span><span class="badge badge-open">Open</span><span style="font-size:12px;color:var(--text-secondary)">Unassigned</span></div>
+        </div>
+        <div class="bug-row">
+          <div class="bug-title">Lambda cold start &gt; 3s timeout</div>
+          <div class="bug-meta"><span class="badge badge-crit">Critical</span><span class="badge badge-prog">In progress</span><span style="font-size:12px;color:var(--text-secondary)">Assigned: Harbir</span></div>
+        </div>
+        <div class="bug-row">
+          <div class="bug-title">/predict API returns 500 on null input</div>
+          <div class="bug-meta"><span class="badge badge-high">High</span><span class="badge badge-open">Open</span><span style="font-size:12px;color:var(--text-secondary)">Assigned: Harbir</span></div>
+        </div>
+        <div class="bug-row">
+          <div class="bug-title">CloudWatch metric aggregation delay</div>
+          <div class="bug-meta"><span class="badge badge-med">Medium</span><span class="badge badge-done">Closed</span><span style="font-size:12px;color:var(--text-secondary)">Resolved</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col">
+    <div class="card">
+      <div class="section-label">Code coverage by module</div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>boto3 automation</span><span>93%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:93%;background:#1D9E75"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>Pandas pipelines</span><span>88%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:88%;background:#1D9E75"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>FastAPI routes</span><span>74%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:74%;background:#378ADD"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>ML model scoring</span><span>67%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:67%;background:#378ADD"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>CloudFormation scripts</span><span>51%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:51%;background:#EF9F27"></div></div>
+      </div>
+      <div class="bar-wrap">
+        <div class="bar-label"><span>MySQL query layer</span><span>38%</span></div>
+        <div class="bar-track"><div class="bar-fill" style="width:38%;background:#E24B4A"></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="section-label">CI/CD pipeline runs</div>
+      <div class="pipeline-row"><div class="dot dot-green"></div><div style="flex:1"><div style="font-weight:500;font-size:13px">main → prod</div><div style="font-size:12px;color:var(--text-secondary)">Jenkins · 4m 12s · just now</div></div><span class="badge badge-pass">Success</span></div>
+      <div class="pipeline-row"><div class="dot dot-red"></div><div style="flex:1"><div style="font-weight:500;font-size:13px">feature/rds-fix</div><div style="font-size:12px;color:var(--text-secondary)">CodePipeline · 1m 58s · 22m ago</div></div><span class="badge badge-fail">Failed</span></div>
+      <div class="pipeline-row"><div class="dot dot-green"></div><div style="flex:1"><div style="font-weight:500;font-size:13px">dev → staging</div><div style="font-size:12px;color:var(--text-secondary)">Jenkins · 3m 41s · 1h ago</div></div><span class="badge badge-pass">Success</span></div>
+      <div class="pipeline-row"><div class="dot dot-amber"></div><div style="flex:1"><div style="font-weight:500;font-size:13px">feature/ml-api</div><div style="font-size:12px;color:var(--text-secondary)">CodePipeline · running · 3m ago</div></div><span class="badge badge-run">Running</span></div>
+      <div class="pipeline-row"><div class="dot dot-green"></div><div style="flex:1"><div style="font-weight:500;font-size:13px">hotfix/lambda-timeout</div><div style="font-size:12px;color:var(--text-secondary)">Jenkins · 2m 05s · 3h ago</div></div><span class="badge badge-pass">Success</span></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">Daily test runs — last 7 days</div>
+    <div class="chart-bars" id="daily-chart"></div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#1D9E75"></div>Passed</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#E24B4A"></div>Failed</div>
+    </div>
+  </div>
+
+  <div class="actions">
+    <a class="btn" href="https://github.com/harbir-sandhu" target="_blank"><i class="ti ti-brand-github" style="font-size:15px;vertical-align:-2px;margin-right:5px" aria-hidden="true"></i>View on GitHub</a>
+    <a class="btn" href="https://www.linkedin.com/in/" target="_blank"><i class="ti ti-brand-linkedin" style="font-size:15px;vertical-align:-2px;margin-right:5px" aria-hidden="true"></i>LinkedIn</a>
+  </div>
+
+</div>
+
+<footer>
+  Built by Harbir Singh Sandhu · Python Developer & ML Engineer · Ontario, Canada
+</footer>
+
+<script>
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const passed = [120,145,132,158,140,88,64];
+  const failed = [18,12,22,8,15,6,4];
+  const maxVal = Math.max(...passed.map((p,i) => p + failed[i]));
+  const chart = document.getElementById('daily-chart');
+
+  days.forEach((d,i) => {
+    const ph = Math.round((passed[i] / maxVal) * 100);
+    const fh = Math.round((failed[i] / maxVal) * 100);
+    const col = document.createElement('div');
+    col.className = 'chart-bar-col';
+    col.innerHTML = `
+      <div class="chart-bar-inner">
+        <div class="chart-bar-seg" style="height:${fh}px;background:#E24B4A;border-radius:2px 2px 0 0;"></div>
+        <div class="chart-bar-seg" style="height:${ph}px;background:#1D9E75;"></div>
+      </div>
+      <div class="chart-day">${d}</div>`;
+    chart.appendChild(col);
+  });
+
+  function filterSuite(status, btn) {
+    document.querySelectorAll('#suite-tabs .tab').forEach(t => t.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('#test-list .test-row').forEach(row => {
+      row.style.display = (status === 'all' || row.dataset.status === status) ? 'flex' : 'none';
+    });
+  }
+</script>
+</body>
+</html>
